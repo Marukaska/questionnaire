@@ -62,7 +62,7 @@ st.title(FORM_TITLE)
 if "extra_channels" not in st.session_state: st.session_state.extra_channels = []
 if "prev_role" not in st.session_state: st.session_state.prev_role = None
 if "prev_channel" not in st.session_state: st.session_state.prev_channel = None
-if "extra_rd" not in st.session_state: st.session_state.extra_rd = []   # stores list of selected extra RD values (or None)
+if "extra_rd" not in st.session_state: st.session_state.extra_rd = []
 if "level_select" not in st.session_state: st.session_state.level_select = None
 
 # Channel
@@ -121,22 +121,20 @@ if channel:
                 if st.button("Добавить дополнительный канал"):
                     st.session_state.extra_channels.append(None)
 
-                st.write("")
+                # Compact extras: no captions or extra spacers
                 to_remove = []
                 for i,_ in enumerate(st.session_state.extra_channels):
-                    st.markdown(f"**Дополнительный канал #{i+1}**")
                     sel_col, btn_col = st.columns([6,1], vertical_alignment="bottom")
                     with sel_col:
                         st.session_state.extra_channels[i] = st.selectbox(
                             "",
                             extra_channel_options,
                             index=None,
-                            placeholder="Выберите канал",
+                            placeholder="Дополнительный канал",
                             key=f"extra_channel_{i}",
                             label_visibility="collapsed"
                         )
                     with btn_col:
-                        st.write("")
                         if st.button("Удалить", key=f"del_extra_channel_{i}"):
                             to_remove.append(i)
                 for idx in reversed(to_remove):
@@ -156,26 +154,22 @@ if not hide_regions and channel:
             selected_rf_branch = st.selectbox("Выберите филиал РФ:", RF_BRANCHES, index=None, placeholder="Выберите филиал", key="rf_branch")
         elif selected_level == "РД (Региональная дирекция)":
             selected_rd = st.selectbox("Выберите РД:", RD_LIST, index=None, placeholder="Выберите РД", key="rd_level")
-            # Add extra RD button for specific roles
             if selected_role in {"Руководитель канала","Руководитель РФ","Руководитель каналов РД"}:
                 if st.button("Добавить дополнительный РД"):
                     st.session_state.extra_rd.append(None)
-                st.write("")
                 to_remove_rd = []
                 for i,_ in enumerate(st.session_state.extra_rd):
-                    st.markdown(f"**Дополнительный РД #{i+1}**")
                     sel_col, btn_col = st.columns([6,1], vertical_alignment="bottom")
                     with sel_col:
                         st.session_state.extra_rd[i] = st.selectbox(
                             "",
                             RD_LIST,
                             index=None,
-                            placeholder="Выберите РД",
+                            placeholder="Дополнительный РД",
                             key=f"extra_rd_{i}",
                             label_visibility="collapsed"
                         )
                     with btn_col:
-                        st.write("")
                         if st.button("Удалить", key=f"del_extra_rd_{i}"):
                             to_remove_rd.append(i)
                 for idx in reversed(to_remove_rd):
